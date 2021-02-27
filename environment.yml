@@ -11,6 +11,7 @@ channels:
 dependencies:
   - flake8 >= 3.8.4
   - isort >= 5.7.0
+  - matplotlib >= 3.3.4
   - pip >= 21.0.1
   - python >= 3.9.2
   - requests >= 2.25.1

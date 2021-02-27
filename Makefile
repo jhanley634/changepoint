@@ -1,7 +1,10 @@
 
 # Copyright 2021 John Hanley. MIT licensed.
 
-all: prepare
+all: ci
+
+ci:
+	flake8
 
 prepare:
 	conda env update
