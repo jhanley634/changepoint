@@ -1,0 +1,5 @@
+
+# Copyright 2021 John Hanley. MIT licensed.
+
+[flake8]
+max-line-length = 90
