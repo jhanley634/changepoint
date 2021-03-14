@@ -12,12 +12,14 @@ dependencies:
   - flake8 >= 3.8.4
   - isort >= 5.7.0
   - matplotlib >= 3.3.4
+  - pandas >= 1.2.1
   - pip >= 21.0.1
   - python >= 3.9.2
   - requests >= 2.25.1
   - ruptures >= 1.1.3
   - ruamel.yaml >= 0.16.12
   - scipy >= 1.6.0
+  - statsmodels >= 0.12.2
   - streamlit >= 0.78.0
   - tqdm >= 4.59.0
   - pip:
