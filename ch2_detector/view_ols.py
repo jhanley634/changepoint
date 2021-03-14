@@ -7,16 +7,21 @@ import statsmodels.formula.api as smf
 import streamlit as sl
 
 
-def ols(m=1, b=0, eps=.1):
-    """Ordinary Least Squares regression demo.
-
-    y = m x + b + epsilon_noise
+def get_line(m=.6, b=7, n_pts=1000):
+    """Values for y = m x + b, on the unit interval.
     """
-    dat = sm.datasets.get_rdataset("Guerry", "HistData").data
-    print(dat)
+    return pd.DataFrame(dict(x=x,
+                             y=m * x + b)
+                        for x in np.linspace(0, 1, n_pts))
+
+
+def ols(eps=.1):
+    """Ordinary Least Squares regression demo.
+    """
+    df = get_line()
 
     # Fit regression model (using the natural log of one of the regressors)
-    results = smf.ols('Lottery ~ Literacy + np.log(Pop1831)', data=dat).fit()
+    results = smf.ols('y ~ x', data=df).fit()
 
     print(results.summary())
 
