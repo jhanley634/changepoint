@@ -9,6 +9,9 @@ ci:
 prepare:
 	conda env update
 
+isort:
+	isort --ff=yes ch*/*.py
+
 
 ACTIVATE = source activate changepoint
 
