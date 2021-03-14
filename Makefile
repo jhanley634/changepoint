@@ -9,6 +9,12 @@ ci:
 prepare:
 	conda env update
 
+
+ACTIVATE = source activate changepoint
+
+run:
+	$(ACTIVATE) && env STREAMLIT_SERVER_RUN_ON_SAVE=true ch2_detector/view_det.py
+
 EXCLUDE = '/\.(git|idea)/|LICENSE'
 L = --files-without-match
 C2021 = 'Copyright 2021 John Hanley\. MIT licensed\.'
