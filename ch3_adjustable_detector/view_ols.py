@@ -19,9 +19,11 @@ def get_line(m=2, b=3, n_pts=1000):
                         for x in np.linspace(0, 1, n_pts))
 
 
-def ols(sigma=.5):
+def ols():
     """Ordinary Least Squares regression demo, with Gaussian noise sigma.
     """
+    sigma = st.slider('sigma', max_value=3.0, value=.5)
+
     df = get_line()
     df.y += sigma * rng.standard_normal(size=len(df))
 
@@ -34,7 +36,6 @@ def ols(sigma=.5):
 
     df.y.clip(upper=6, inplace=True)  # This is convenient for stable y_lim, interactively.
     st.line_chart(df)
-    st.write(df)
 
 
 if __name__ == '__main__':

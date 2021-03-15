@@ -10,6 +10,7 @@ import ruptures as rpt
 import streamlit as st
 
 rng = default_rng(seed=None)
+SP = ' &nbsp; &nbsp; '
 
 
 class Detector:
@@ -27,7 +28,7 @@ class Detector:
         n_samples, dim, sigma = 1000, 1, 4
         n_bkpts = 4  # number of breakpoints
         signal, bkpts = rpt.pw_constant(n_samples, dim, n_bkpts, noise_std=sigma)
-        st.write(bkpts)
+        st.write(f'breakpoints at: {SP} ', f', {SP} '.join(map(str, bkpts)))
 
         # detection
         result = rpt.Pelt(model='rbf').fit(signal).predict(pen=10)
