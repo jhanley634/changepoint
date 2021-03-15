@@ -23,6 +23,12 @@ class Detector:
     @staticmethod
     def demo1():
         """From https://github.com/deepcharles/ruptures"""
+        rpt_algo = st.select_slider('algorithm', [
+            rpt.Binseg,
+            rpt.BottomUp,
+            rpt.Pelt,
+            rpt.Window,
+        ])
 
         # generate signal
         n_samples, dim = 1000, 1
@@ -32,7 +38,7 @@ class Detector:
         st.write(f'breakpoints at: {SP} ', f', {SP} '.join(map(str, bkpts)))
 
         # detection
-        result = rpt.Pelt(model='rbf').fit(signal).predict(pen=10)
+        result = rpt_algo(model='rbf').fit(signal).predict(pen=10)
 
         df = pd.DataFrame()
         df['signal'] = pd.Series(map(abs, signal))
