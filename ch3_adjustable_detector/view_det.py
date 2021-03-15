@@ -23,7 +23,7 @@ class Detector:
     @staticmethod
     def demo1():
         """From https://github.com/deepcharles/ruptures"""
-        rpt_algo = st.select_slider('algorithm', [
+        rpt_algo = st.radio('algorithm', [
             rpt.Binseg,
             rpt.BottomUp,
             rpt.Pelt,
