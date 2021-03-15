@@ -2,6 +2,8 @@
 
 # Copyright 2021 John Hanley. MIT licensed.
 
+import statistics
+
 from numpy.random import default_rng
 import matplotlib.pyplot as plt
 import numpy as np
@@ -21,7 +23,17 @@ class Detector:
     """
 
     @staticmethod
-    def demo1():
+    def _find_averages(signal, bkpts):
+        assert bkpts[0] > 0, bkpts
+        i = 0
+        for regime_idx in bkpts:
+            mean = statistics.mean(signal[i:regime_idx])
+            while i < regime_idx:
+                yield mean
+                i += 1
+
+    @classmethod
+    def demo1(cls):
         """From https://github.com/deepcharles/ruptures"""
         rpt_algo = st.radio('algorithm', [
             rpt.Binseg,
@@ -42,14 +54,19 @@ class Detector:
 
         df = pd.DataFrame()
         df['signal'] = pd.Series(map(float, signal))
-        df['mean'] = pd.Series()
+        df['avg'] = pd.Series(cls._find_averages(df.signal, bkpts))
         df['result'] = pd.Series(int(i in result) * 25
                                  for i in range(len(signal)))
+        assert len(df) == len(df.signal)
+        assert len(df) == len(df.avg)
+        assert len(df) == len(df.result)
+        print(df.avg)
 
         # display
         x = np.arange(len(signal))
         fig, ax = plt.subplots()
         ax.plot(x, df.signal, label='signal')
+        ax.plot(x, df.avg, label='mean')
         ax.plot(x, df.result, label='change point')
         ax.set_ylim(0, 35)
         ax.legend()
