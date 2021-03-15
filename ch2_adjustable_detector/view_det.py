@@ -23,7 +23,7 @@ class Detector:
     """
 
     @staticmethod
-    def _find_averages(signal, bkpts):
+    def _get_averages(signal, bkpts):
         assert bkpts[0] > 0, bkpts
         i = 0
         for regime_idx in bkpts:
@@ -31,6 +31,16 @@ class Detector:
             while i < regime_idx:
                 yield mean
                 i += 1
+
+    @staticmethod
+    def _get_bkpt_results(n, bkpts, k=20):
+        for i in range(n):
+            if i - 1 in bkpts:
+                yield -k
+            elif i in bkpts:
+                yield k
+            else:
+                yield 0
 
     @classmethod
     def demo1(cls):
@@ -50,13 +60,12 @@ class Detector:
         st.write(f'breakpoints at: {SP} ', f', {SP} '.join(map(str, bkpts)))
 
         # detection
-        result = rpt_algo(model='rbf').fit(signal).predict(pen=10)
+        bkpt_result = rpt_algo(model='rbf').fit(signal).predict(pen=10)
 
         df = pd.DataFrame()
         df['signal'] = pd.Series(map(float, signal))
-        df['avg'] = pd.Series(cls._find_averages(df.signal, bkpts))
-        df['result'] = pd.Series(int(i in result) * 25
-                                 for i in range(len(signal)))
+        df['avg'] = pd.Series(cls._get_averages(df.signal, bkpts))
+        df['result'] = pd.Series(cls._get_bkpt_results(len(df.signal), set(bkpts)))
         assert len(df) == len(df.signal)
         assert len(df) == len(df.avg)
         assert len(df) == len(df.result)
@@ -68,8 +77,8 @@ class Detector:
         ax.plot(x, df.signal, label='signal')
         ax.plot(x, df.avg, label='mean')
         ax.plot(x, df.result, label='change point')
-        ax.set_ylim(0, 35)
-        ax.legend()
+        ax.set_ylim(bottom=-37, top=37)
+        ax.legend(loc='upper right')
         st.pyplot(fig)
 
 
