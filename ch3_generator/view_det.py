@@ -2,13 +2,12 @@
 
 # Copyright 2021 John Hanley. MIT licensed.
 
-import statistics
+from time import time
 
 from numpy.random import default_rng
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import ruptures as rpt
 import streamlit as st
 
 from ch2_adjustable_detector.view_all_det import rpt_algorithms
@@ -39,17 +38,26 @@ class Detector:
 
         # generate signal
         n_samples = 1000
+        kind = st.radio('kind', ['step', 'ramp'])
         sigma = st.slider('sigma', max_value=11.0, value=1.)
         bkpt = st.slider('breakpoint', 0, n_samples, value=500)
         signal = np.random.normal(0, sigma, n_samples)
-        signal[bkpt:] += [1] * (n_samples - bkpt)
+        n_after = n_samples - bkpt  # number of samples after the breakpoint
+        if kind == 'step':
+            signal[bkpt:] += [1] * n_after
+        else:
+            ramp = np.zeros((bkpt,), dtype='float64')
+            ramp = np.pad(ramp, (0, n_after), mode='linear_ramp', end_values=1.0)
+            signal += ramp
 
         results = []
         # detection
         for algo in rpt_algorithms:
+            t0 = time()
             bkpt_result = algo(model='rbf').fit(signal).predict(pen=10)
             bkpt_result += [0] * 5  # In case we miss a breakpoint or two.
-            d = dict(name=algo.__name__)
+            msecs = int(1e3 * round(time() - t0, 3))
+            d = dict(msecs=msecs, name=algo.__name__)
             for i in range(5):
                 d[f'b{i}'] = bkpt_result[i]
             results.append(d)
