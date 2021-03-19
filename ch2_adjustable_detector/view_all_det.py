@@ -14,6 +14,13 @@ import streamlit as st
 rng = default_rng(seed=None)
 SP = ' &nbsp; &nbsp; '
 
+rpt_algorithms = [
+    rpt.Binseg,
+    rpt.BottomUp,
+    rpt.Pelt,
+    rpt.Window,
+]
+
 
 class Detector:
     """A changepoint detector.
@@ -45,12 +52,6 @@ class Detector:
     @classmethod
     def demo3(cls):
         """From https://github.com/deepcharles/ruptures"""
-        rpt_algorithms = [
-            rpt.Binseg,
-            rpt.BottomUp,
-            rpt.Pelt,
-            rpt.Window,
-        ]
 
         # generate signal
         n_samples, dim = 1000, 1
@@ -63,7 +64,7 @@ class Detector:
         # detection
         for algo in rpt_algorithms:
             bkpt_result = algo(model='rbf').fit(signal).predict(pen=10)
-            bkpt_result += [0, 0, 0, 0, 0]  # In case we miss a breakpoint or two.
+            bkpt_result += [0] * 5  # In case we miss a breakpoint or two.
             d = dict(name=algo.__name__)
             for i in range(5):
                 d[f'b{i}'] = bkpt_result[i]

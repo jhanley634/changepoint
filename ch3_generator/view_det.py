@@ -2,6 +2,8 @@
 
 # Copyright 2021 John Hanley. MIT licensed.
 
+import statistics
+
 from numpy.random import default_rng
 import matplotlib.pyplot as plt
 import numpy as np
@@ -9,8 +11,9 @@ import pandas as pd
 import ruptures as rpt
 import streamlit as st
 
+from ch2_adjustable_detector.view_all_det import rpt_algorithms
+
 rng = default_rng(seed=None)
-SP = ' &nbsp; &nbsp; '
 
 
 class Detector:
@@ -21,39 +24,50 @@ class Detector:
     """
 
     @staticmethod
-    def demo1():
+    def _get_bkpt_results(n, bkpts, k=20):
+        for i in range(n):
+            if i - 1 in bkpts:
+                yield -k
+            elif i in bkpts:
+                yield k
+            else:
+                yield 0
+
+    @classmethod
+    def demo4(cls):
         """From https://github.com/deepcharles/ruptures"""
-        rpt_algo = st.radio('algorithm', [
-            rpt.Binseg,
-            rpt.BottomUp,
-            rpt.Pelt,
-            rpt.Window,
-        ])
 
         # generate signal
-        n_samples, dim = 1000, 1
-        sigma = st.slider('sigma', max_value=4.0, value=.5)
-        n_bkpts = 4  # number of breakpoints
-        signal, bkpts = rpt.pw_constant(n_samples, dim, n_bkpts, noise_std=sigma)
-        st.write(f'breakpoints at: {SP} ', f', {SP} '.join(map(str, bkpts)))
+        n_samples = 1000
+        sigma = st.slider('sigma', max_value=11.0, value=1.)
+        bkpt = st.slider('breakpoint', 0, n_samples, value=500)
+        signal = np.random.normal(0, sigma, n_samples)
+        signal[bkpt:] += [1] * (n_samples - bkpt)
 
+        results = []
         # detection
-        result = rpt_algo(model='rbf').fit(signal).predict(pen=10)
+        for algo in rpt_algorithms:
+            bkpt_result = algo(model='rbf').fit(signal).predict(pen=10)
+            bkpt_result += [0] * 5  # In case we miss a breakpoint or two.
+            d = dict(name=algo.__name__)
+            for i in range(5):
+                d[f'b{i}'] = bkpt_result[i]
+            results.append(d)
+
+        results = pd.DataFrame(results)
+        st.write(results)
 
         df = pd.DataFrame()
         df['signal'] = pd.Series(map(float, signal))
-        df['result'] = pd.Series(int(i in result) * 25
-                                 for i in range(len(signal)))
 
         # display
         x = np.arange(len(signal))
         fig, ax = plt.subplots()
         ax.plot(x, df.signal, label='signal')
-        ax.plot(x, df.result, label='change point')
-        ax.set_ylim(0, 35)
-        ax.legend()
+        ax.set_ylim(bottom=-12, top=12)
+        ax.legend(loc='upper right')
         st.pyplot(fig)
 
 
 if __name__ == '__main__':
-    Detector.demo1()
+    Detector.demo4()
