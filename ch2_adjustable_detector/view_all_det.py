@@ -15,10 +15,10 @@ rng = default_rng(seed=None)
 SP = ' &nbsp; &nbsp; '
 
 rpt_algorithms = [
-    rpt.Binseg,
-    rpt.BottomUp,
-    rpt.Pelt,
     rpt.Window,
+    rpt.BottomUp,
+    rpt.Binseg,
+    rpt.Pelt,
 ]
 
 

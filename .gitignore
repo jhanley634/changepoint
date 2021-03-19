@@ -2,3 +2,4 @@
 # Copyright 2021 John Hanley. MIT licensed.
 
 .idea/
+__pycache__/

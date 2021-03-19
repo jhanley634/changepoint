@@ -39,7 +39,7 @@ class Detector:
         # generate signal
         n_samples = 1000
         kind = st.radio('kind', ['step', 'ramp'])
-        sigma = st.slider('sigma', max_value=11.0, value=1.)
+        sigma = st.slider('sigma', max_value=4.0, value=1.)
         bkpt = st.slider('breakpoint', 0, n_samples, value=500)
         signal = np.random.normal(0, sigma, n_samples)
         n_after = n_samples - bkpt  # number of samples after the breakpoint
@@ -72,7 +72,7 @@ class Detector:
         x = np.arange(len(signal))
         fig, ax = plt.subplots()
         ax.plot(x, df.signal, label='signal')
-        ax.set_ylim(bottom=-12, top=12)
+        ax.set_ylim(bottom=-6, top=6)
         ax.legend(loc='upper right')
         st.pyplot(fig)
 
