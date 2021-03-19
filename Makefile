@@ -24,10 +24,11 @@ run3:
 
 
 INSTALL = conda install -c conda-forge -y
-PKGS = pandas-profiling
+PKGS = pandas-profiling sweetviz
 
-viz/covid-profile.html:
+viz/out/profile.html:
 	$(ACTIVATE) && conda list | grep pandas-profiling || $(INSTALL) $(PKGS)
+	viz/sweet.py
 	viz/pd_prof.py
 
 EXCLUDE = '/\.(git|idea)/|/__pycache__/|LICENSE'
