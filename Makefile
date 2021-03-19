@@ -22,6 +22,14 @@ run2:
 run3:
 	$(ACTIVATE) && $(ENV) ch3_generator/view_det.py
 
+
+INSTALL = conda install -c conda-forge -y
+PKGS = pandas-profiling
+
+viz/covid-profile.html:
+	$(ACTIVATE) && conda list | grep pandas-profiling || $(INSTALL) $(PKGS)
+	viz/pd_prof.py
+
 EXCLUDE = '/\.(git|idea)/|/__pycache__/|LICENSE'
 L = --files-without-match
 C2021 = 'Copyright 2021 John Hanley\. MIT licensed\.'

@@ -4,7 +4,6 @@
 
 from pathlib import Path
 
-from numpy.random import default_rng
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -12,7 +11,11 @@ import streamlit as st
 
 from ch2_adjustable_detector.view_all_det import rpt_algorithms
 
-rng = default_rng(seed=None)
+
+def get_covid_repo():
+    nyt_repo = Path(__file__ + '/../../../covid-19-data').resolve()
+    assert nyt_repo.exists(), nyt_repo
+    return nyt_repo
 
 
 class CaseDetector:
@@ -27,17 +30,12 @@ class CaseDetector:
             yield float(val - prev)
             prev = val
 
-    @staticmethod
-    def _get_us_csv_fspec():
-        nyt_repo = Path(__file__ + '/../../../covid-19-data').resolve()
-        return nyt_repo / 'us.csv'
-
     @classmethod
     def demo5(cls):
 
         kind = st.radio('kind', ['raw', 'delta'])
 
-        df = pd.read_csv(cls._get_us_csv_fspec())
+        df = pd.read_csv(get_covid_repo() / 'us.csv')
 
         daily_cases = np.array(list(cls._get_deltas(df.cases)))
         df['daily_cases'] = daily_cases
