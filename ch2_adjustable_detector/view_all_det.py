@@ -43,14 +43,14 @@ class Detector:
                 yield 0
 
     @classmethod
-    def demo2(cls):
+    def demo3(cls):
         """From https://github.com/deepcharles/ruptures"""
-        rpt_algo = st.radio('algorithm', [
+        rpt_algorithms = [
             rpt.Binseg,
             rpt.BottomUp,
             rpt.Pelt,
             rpt.Window,
-        ])
+        ]
 
         # generate signal
         n_samples, dim = 1000, 1
@@ -59,8 +59,18 @@ class Detector:
         signal, bkpts = rpt.pw_constant(n_samples, dim, n_bkpts, noise_std=sigma)
         st.write(f'breakpoints at: {SP} ', f', {SP} '.join(map(str, bkpts)))
 
+        results = []
         # detection
-        bkpt_result = rpt_algo(model='rbf').fit(signal).predict(pen=10)
+        for algo in rpt_algorithms:
+            bkpt_result = algo(model='rbf').fit(signal).predict(pen=10)
+            bkpt_result += [0, 0, 0, 0, 0]  # In case we miss a breakpoint or two.
+            d = dict(name=algo.__name__)
+            for i in range(5):
+                d[f'b{i}'] = bkpt_result[i]
+            results.append(d)
+
+        results = pd.DataFrame(results)
+        st.write(results)
 
         df = pd.DataFrame()
         df['signal'] = pd.Series(map(float, signal))
@@ -83,4 +93,4 @@ class Detector:
 
 
 if __name__ == '__main__':
-    Detector.demo2()
+    Detector.demo3()

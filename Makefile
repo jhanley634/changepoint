@@ -16,7 +16,7 @@ isort:
 ACTIVATE = source activate changepoint
 
 run:
-	$(ACTIVATE) && env STREAMLIT_SERVER_RUN_ON_SAVE=true ch2_adjustable_detector/view_det.py
+	$(ACTIVATE) && env STREAMLIT_SERVER_RUN_ON_SAVE=true ch2_adjustable_detector/view_all_det.py
 
 EXCLUDE = '/\.(git|idea)/|LICENSE'
 L = --files-without-match
