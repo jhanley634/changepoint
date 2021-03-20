@@ -24,12 +24,13 @@ run3:
 
 
 INSTALL = conda install -c conda-forge -y
-PKGS = pandas-profiling sweetviz
+PKGS = pandas-profiling sweetviz xlrd
 
 viz/out/profile.html:
-	$(ACTIVATE) && conda list | grep pandas-profiling || $(INSTALL) $(PKGS)
-	viz/sweet.py
-	viz/pd_prof.py
+	$(ACTIVATE) && conda list | grep pandas-profiling || ($(INSTALL) $(PKGS); pip install autoviz)
+	$(ACTIVATE) && viz/ch_autoviz.py
+	$(ACTIVATE) && viz/sweet.py
+	$(ACTIVATE) && viz/pd_prof.py
 
 EXCLUDE = '/\.(git|idea)/|/__pycache__/|LICENSE'
 L = --files-without-match

@@ -4,4 +4,5 @@
 *.html
 *.pdf
 .idea/
+AutoViz_Plots/
 __pycache__/
