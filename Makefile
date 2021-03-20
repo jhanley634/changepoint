@@ -24,11 +24,10 @@ run3:
 
 
 INSTALL = conda install -c conda-forge -y
-PKGS = dtale pandas-profiling sweetviz xlrd
+PKGS = pandas-profiling sweetviz xlrd
 
-viz/out/profile.html:
+viz/out/sweet.html:
 	$(ACTIVATE) && conda list | grep pandas-profiling || ($(INSTALL) $(PKGS); pip install autoviz)
-	$(ACTIVATE) && viz/d_tale.py
 	$(ACTIVATE) && viz/sweet.py
 	$(ACTIVATE) && viz/ch_autoviz.py
 	# $(ACTIVATE) && viz/pd_prof.py
