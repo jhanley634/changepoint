@@ -32,7 +32,11 @@ viz/out/sweet.html:
 	$(ACTIVATE) && viz/ch_autoviz.py
 	# $(ACTIVATE) && viz/pd_prof.py
 
-EXCLUDE = '/\.(git|idea)/|/__pycache__/|LICENSE'
+auto/foo.txt:
+	$(ACTIVATE) && conda list | grep auto-sklearn || $(INSTALL) pyrfr tpot
+	$(ACTIVATE) && conda list | grep auto-sklearn || pip install auto-sklearn
+
+EXCLUDE = '/\.(git|idea)/|/__pycache__/|LICENSE|\.(html|pdf|png)$$'
 L = --files-without-match
 C2021 = 'Copyright 2021 John Hanley\. MIT licensed\.'
 audit:
