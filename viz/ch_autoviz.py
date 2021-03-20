@@ -8,9 +8,6 @@ from viz.pd_prof import get_us_df
 
 
 if __name__ == '__main__':
-    fspec = '/tmp/us.csv'
-    df = get_us_df()
-    df.to_csv(fspec)
 
     AV = AutoViz_Class()
-    dft = AV.AutoViz('', dfte=df, depVar='deaths', verbose=2, chart_format='png')
+    dft = AV.AutoViz('', dfte=get_us_df(), depVar='deaths', verbose=2, chart_format='png')
