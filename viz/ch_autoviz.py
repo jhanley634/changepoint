@@ -13,6 +13,4 @@ if __name__ == '__main__':
     df.to_csv(fspec)
 
     AV = AutoViz_Class()
-    dft = AV.AutoViz('', dfte=df, depVar='deaths', verbose=2, chart_format='PNG')
-
-    # a.show_html('viz/out/sweet.html')
+    dft = AV.AutoViz('', dfte=df, depVar='deaths', verbose=2, chart_format='png')

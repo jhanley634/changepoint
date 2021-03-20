@@ -3,6 +3,7 @@
 
 *.html
 *.pdf
+.DS_Store
 .idea/
 AutoViz_Plots/
 __pycache__/
