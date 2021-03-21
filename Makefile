@@ -10,7 +10,7 @@ prepare:
 	conda env update
 
 isort:
-	isort --ff=yes ch*/*.py
+	isort --ff=yes [acv]*/*.py
 
 
 ACTIVATE = source activate changepoint

@@ -6,7 +6,6 @@ from autoviz.AutoViz_Class import AutoViz_Class
 
 from viz.pd_prof import get_us_df
 
-
 if __name__ == '__main__':
 
     AV = AutoViz_Class()
