@@ -26,14 +26,20 @@ def get_curve(lo=0, hi=100, n_samples=1000, sigma=2e3):
 
 
 def main():
+    # training (fitting)
     df = get_curve()
+    np_model = np.poly1d(np.polyfit(df.x, df.y, 2))  # np stmt 1
+    print(np_model)
+
     poly_features = PolynomialFeatures(degree=2, include_bias=False)
     x_poly = poly_features.fit_transform(arr(df.x))
     lin_reg = LinearRegression()
     lin_reg.fit(x_poly, df.y)
     print(lin_reg.intercept_, lin_reg.coef_)
 
+    # inference
     df = get_curve(-300, 500)
+    np_pred = list(map(np_model, df.x))  # np stmt 2
     x = arr(df.x)
     x = poly_features.transform(x)
 
@@ -48,6 +54,7 @@ def main():
     fig, ax = plt.subplots()
     ax.plot(df.x, df.y, label='signal')
     ax.plot(df.x, pred, label='predicted')
+    ax.plot(df.x, np_pred, label='predicted by NP')
     ax.legend(loc='upper left')
     plt.show()
 
