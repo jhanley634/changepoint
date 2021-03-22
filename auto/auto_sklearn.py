@@ -5,6 +5,7 @@
 from autosklearn.regression import AutoSklearnRegressor
 from sklearn.metrics import mean_absolute_error
 from sklearn.model_selection import TimeSeriesSplit
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
@@ -20,7 +21,7 @@ def pnomial(x, a=0, b=0, c=4, d=5):
     return a * x**3 + b * x**2 + c * x + d
 
 
-def get_curve(lo=0, hi=100, n_samples=1000, sigma=.5):
+def get_curve(lo=0, hi=100, n_samples=1000, sigma=20):
     df = pd.DataFrame(dict(x=np.linspace(lo, hi, n_samples)))
     df['y'] = df.x.apply(pnomial) + sigma * np.random.standard_normal(n_samples)
 
@@ -64,6 +65,12 @@ def main():
     df['pred'] = np.array(pred)
     df['delta'] = df.y - df.pred
     print(df)
+
+    fig, ax = plt.subplots()
+    ax.plot(df.x, df.y, label='signal')
+    ax.plot(df.x, pred, label='predicted')
+    ax.legend(loc='upper right')
+    plt.show()
 
 
 if __name__ == '__main__':
