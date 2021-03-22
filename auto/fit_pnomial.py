@@ -2,6 +2,7 @@
 
 # Copyright 2021 John Hanley. MIT licensed.
 
+from numpy.polynomial import Polynomial
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error
 from sklearn.preprocessing import PolynomialFeatures
@@ -28,8 +29,8 @@ def get_curve(lo=0, hi=100, n_samples=1000, sigma=2e3):
 def main():
     # training (fitting)
     df = get_curve()
-    np_model = np.poly1d(np.polyfit(df.x, df.y, 2))  # np stmt 1
-    print(np_model)
+    np_model = Polynomial.fit(df.x, df.y, 2)  # np stmt 1
+    print(type(np_model), np_model)
 
     poly_features = PolynomialFeatures(degree=2, include_bias=False)
     x_poly = poly_features.fit_transform(arr(df.x))
@@ -54,7 +55,9 @@ def main():
     fig, ax = plt.subplots()
     ax.plot(df.x, df.y, label='signal')
     ax.plot(df.x, pred, label='predicted')
-    ax.plot(df.x, np_pred, label='predicted by NP')
+    # ax.plot(df.x, np_pred, label='predicted by NP')  # overwritten by pred pixels
+    diff = max(map(abs, np_pred - pred))
+    assert diff < 1e-6, diff
     ax.legend(loc='upper left')
     plt.show()
 
