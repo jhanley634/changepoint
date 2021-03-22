@@ -4,7 +4,7 @@
 
 from autosklearn.regression import AutoSklearnRegressor
 from sklearn.metrics import mean_absolute_error
-from sklearn.model_selection import TimeSeriesSplit, train_test_split
+from sklearn.model_selection import TimeSeriesSplit
 import numpy as np
 import pandas as pd
 
@@ -38,15 +38,21 @@ def main():
     # y = df.deaths
 
     df = get_curve()
-    features = pd.DataFrame(df, columns=['x'])
-    target = pd.DataFrame(df, columns=['y'])
-    xtrain, xtest, ytrain, ytest = train_test_split(features, target, test_size=0.2)
-    print(xtrain)
+    features = arr(df.x)
+    target = arr(df.y)
+    tscv = TimeSeriesSplit(n_splits=2)
+
+    # xtrain, xtest, ytrain, ytest = train_test_split(features, target, test_size=0.2)
+    for train_index, test_index in tscv.split(features):
+        print("TRAIN:", len(train_index), "TEST:", len(test_index))
+        assert max(train_index) < min(test_index)
+        x_train, _ = features[train_index], features[test_index]
+        y_train, _ = target[train_index], target[test_index]
 
     regressor = AutoSklearnRegressor(
         time_left_for_this_task=50,
         include_estimators=['ard_regression'])
-    regressor.fit(xtrain, ytrain)
+    regressor.fit(x_train, y_train)
     print(regressor.show_models())
     print(regressor.sprint_statistics())
 
